@@ -10,6 +10,9 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  analogWrite(LED_R,0);
+  analogWrite(LED_G,0);
+  analogWrite(LED_B,0);
   for(int i=1;i<=255;++i)
   {
     analogWrite(LED_R,i);
@@ -27,5 +30,4 @@ void loop() {
     analogWrite(LED_B,i);
     delay(3);
   }
-  analogWrite(LED_B,0);
 }
