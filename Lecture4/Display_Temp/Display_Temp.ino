@@ -19,28 +19,29 @@ void setup()
   Wire.begin();
   display.begin(SSD1306_SWITCHCAPVCC,ADDRESS);
   delay(1000);  
-  display.clearDisplay();
+  display.setTextSize(1); //选择字号
+  display.setTextColor(WHITE);  //字体颜色
   display.display();
 }
  
 void loop()
 {
+  display.clearDisplay();
   Serial.println("\n");
-  display.setTextSize(1); //选择字号
-  display.setTextColor(WHITE);  //字体颜色
+
 
   DHT dht4(4, 11,1);
-  
   
   Serial.print("Humidity (%): ");
   Serial.println((float)dht4.readHumidity(), 4);
   display.setCursor(0,0);
-  display.print("Humidity (%): ");display.println((float)dht4.readHumidity());
- 
+  display.print("Humidity (%): ");display.print((float)dht4.readHumidity());
+
   Serial.print("Temperature (oC): ");
-  Serial.println((float)dht4.readTemperature(), 4);
+  Serial.print((float)dht4.readTemperature(), 4);
+
   display.setCursor(0,16);
-  display.print("Temperature (oC): ");display.println((float)dht4.readTemperature());
+  display.print("Temperature (oC): ");display.print((float)dht4.readTemperature());
   display.display();
   delay(10);
 }
