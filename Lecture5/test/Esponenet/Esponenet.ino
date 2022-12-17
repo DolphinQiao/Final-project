@@ -10,7 +10,7 @@ Date: 2020/05/17
 
 
 DHT11 dht11;
-#define DHT11PIN 4 //pin3
+#define DHT11PIN 4 //pin4
 
 #define KEY  "orGOWkTylM1rKLCLxyrweUAyKcs="    //APIkey 
 #define ID   "1025983425"                       //设备ID
@@ -59,8 +59,7 @@ bool doCmdOk(String data, char *keyword)
       delay(200);
     if (WIFI_UART.find(keyword))   //返回值判断
     {
-    
-    
+
          result = true;
     }
     else
@@ -80,11 +79,11 @@ bool doCmdOk(String data, char *keyword)
    shiftOut(dioPin, clkPin, LSBFIRST, value);   //send data(value) to the segment display module
    digitalWrite(stbPin, HIGH);                  //pin high.  Stop receiving data
 }  
+int Light=1;
 void setup()
 {
-    
-      char buf[100] = {
-    0};
+      pinMode(Light,INPUT);
+      char buf[100] = {0};
       int tmp;
        
       pinMode(13, OUTPUT);   //WIFI模块指示灯
@@ -111,10 +110,11 @@ void setup()
       while (!doCmdOk("AT+CIPMODE=1", "OK"));           //透传模式
       while (!doCmdOk("AT+CIPSEND", ">"));              //开始发送
 }
-     int dht_flag = 1;
+int dht_flag = 1;
 void loop()
 {
-    
+    int li=analogRead(Light);
+    //Serial.println(li);
     static int edp_connect = 0;
     bool trigger = false;
     edp_pkt rcv_pkt;
@@ -123,7 +123,7 @@ void loop()
     char num[10];
     
     int wd,sd;
-    char wd1[20],sd1[20];
+    char wd1[20],sd1[20],li1[20];
     
 /* EDP 连接 */
     if (!edp_connect)
@@ -144,8 +144,7 @@ void loop()
     
         digitalWrite(13, LOW);   // 使Led灭
     }
-    else
-         ;
+    else;
     }
          packetClear(&rcv_pkt);
     }
@@ -160,12 +159,15 @@ void loop()
       sd = dht11.humidity;
       sprintf(wd1,"%d",wd); //int型转换char型
       sprintf(sd1,"%d",sd); //int型转换char型
+      sprintf(li1,"%d",li);
       DHT11 = 0;
       delay(500);
       
       packetSend(packetDataSaveTrans(NULL, "WD", wd1)); //将新数据值上传至数据流 WD是上传的地方 wd1是上传的数据
       delay(500);
       packetSend(packetDataSaveTrans(NULL, "SD", sd1)); //将新数据值上传至数据流
+      delay(500);
+      packetSend(packetDataSaveTrans(NULL, "LI", li1)); //将新数据值上传至数据流
       delay(500);
     }
     
@@ -177,17 +179,20 @@ void loop()
  {
     
    
-     dht11.read(DHT11PIN);
+    dht11.read(DHT11PIN);
     wd = dht11.temperature;
     sd = dht11.humidity;
 
     sprintf(wd1,"%d",wd); //int型转换char型
     sprintf(sd1,"%d",sd); //int型转换char型
+    sprintf(li1,"%d",li);
     DHT11 = 0;
     delay(500);
     packetSend(packetDataSaveTrans(NULL, "WD", wd1)); //将新数据值上传至数据流
     delay(500);
     packetSend(packetDataSaveTrans(NULL, "SD", sd1)); //将新数据值上传至数据流
+    delay(500);
+    packetSend(packetDataSaveTrans(NULL, "LI", li1)); //将新数据值上传至数据流
     delay(500);
   }
 
