@@ -1,0 +1,17 @@
+int light=1;
+int buzzer=5;
+float sum=0;
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(buzzer,OUTPUT);
+  pinMode(light,INPUT);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  float l=analogRead(light);
+  sum=sum+l;
+  tone(buzzer,sum/15);
+  delay(40);
+}
